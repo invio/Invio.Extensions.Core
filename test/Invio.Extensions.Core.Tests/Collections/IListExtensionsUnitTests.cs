@@ -138,5 +138,40 @@ namespace Invio.Extensions.Core.Tests.Collections {
                 var (first, second, third, fourth, fifth, _) = source;
             });
         }
+
+        [Fact]
+        public void Destructure_One_ArgumentNull() {
+            Assert.Throws<ArgumentNullException>(() => {
+                var (first, _) = (Int32[])null;
+            });
+        }
+
+        [Fact]
+        public void Destructure_Two_ArgumentNull() {
+            Assert.Throws<ArgumentNullException>(() => {
+                var (first, second, _) = (Int32[])null;
+            });
+        }
+
+        [Fact]
+        public void Destructure_Three_ArgumentNull() {
+            Assert.Throws<ArgumentNullException>(() => {
+                var (first, second, third, _) = (Int32[])null;
+            });
+        }
+
+        [Fact]
+        public void Destructure_Four_ArgumentNull() {
+            Assert.Throws<ArgumentNullException>(() => {
+                var (first, second, third, fourth, _) = (Int32[])null;
+            });
+        }
+
+        [Fact]
+        public void Destructure_Five_ArgumentNull() {
+            Assert.Throws<ArgumentNullException>(() => {
+                var (first, second, third, fourth, fifth, _) = (Int32[])null;
+            });
+        }
     }
 }
