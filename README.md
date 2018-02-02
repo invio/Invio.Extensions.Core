@@ -78,3 +78,13 @@ Task.FromResult(
 	(await someTask.ConfigureAwait(false)));
 // use this
 someTask.Cast<IEnumerable<String>>();
+```
+
+### ContinueWithResult
+
+If you have a `Task<T>` and you want to run some synchronous transformation function on its result when it completes, it is either necessary to await the result, or use `ContinueWith` however `ContinueWith` executes the continuation whether the original task succeeds or fails, and accessing `Task<T>.Result` obfuscates exceptions by wrapping them in an `AggregateException`.
+
+```csharp
+Task<String> someTask;
+someTask.ContinueWithResult(str => str.ToUpper());
+```

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.ExceptionServices;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Invio.Extensions.Threading.Tasks {
@@ -55,6 +57,58 @@ namespace Invio.Extensions.Threading.Tasks {
                     .Invoke(null, new Object[] { task });
 
             return (Task<T>)castTask;
+        }
+
+        /// <summary>
+        /// Create a new task that synchronously executes a function on the result of an input task
+        /// upon completion of that task.
+        /// </summary>
+        /// <param name="task">
+        /// Ths input task.
+        /// </param>
+        /// <param name="func">
+        /// The function to execute.
+        /// </param>
+        /// <typeparam name="TResult">
+        /// The type of the result returned by the input task.
+        /// </typeparam>
+        /// <typeparam name="TNewResult">
+        /// The type returned by the function.
+        /// </typeparam>
+        /// <returns>
+        /// A task which returns the result of executing <paramref name="func" /> on the result of
+        /// <paramref name="task" />.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        /// The argument <paramref name="task" /> is null.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// The argument <paramref name="func" /> is null.
+        /// </exception>
+        public static Task<TNewResult> ContinueWithResult<TResult, TNewResult>(
+            this Task<TResult> task,
+            Func<TResult, TNewResult> func) {
+
+            if (task == null) {
+                throw new ArgumentNullException(nameof(task));
+            }
+            if (func == null) {
+                throw new ArgumentNullException(nameof(func));
+            }
+
+            return task.ContinueWith(
+                t => {
+                    try {
+                        return func(t.Result);
+                    } catch(AggregateException ex) {
+                        ExceptionDispatchInfo.Capture(ex.InnerException).Throw();
+                        throw;
+                    }
+                },
+                CancellationToken.None,
+                TaskContinuationOptions.ExecuteSynchronously,
+                TaskScheduler.Default
+            );
         }
 
         private static MethodInfo genericCastMethod { get; } =

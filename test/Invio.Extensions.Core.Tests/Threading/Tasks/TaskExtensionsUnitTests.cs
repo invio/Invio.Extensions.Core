@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Invio.Extensions.Collections;
 using Invio.Extensions.Threading.Tasks;
@@ -146,6 +147,75 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
             var exception = Assert.Throws<ArgumentException>(() => (Object)task.Cast<Object>());
 
             Assert.Equal("task", exception.ParamName);
+        }
+
+        [Fact]
+        public async Task ContinueWithResult_FunctionExecuted() {
+            var task = GenerateRandomData(IterationCount);
+
+            var result = await task.ContinueWithResult(list => list.Max());
+
+            Assert.True(task.IsCompletedSuccessfully);
+            Assert.Equal(task.Result.Max(), result);
+        }
+
+        [Fact]
+        public async Task ContinueWithResult_ExecutedSynchronously() {
+            var threadId = -1;
+            var continuationThreadId = -2;
+
+            var task = new Task<Int32>(() => {
+                threadId = Thread.CurrentThread.ManagedThreadId;
+                Thread.Sleep(50);
+                return 21;
+            });
+            task.Start();
+
+            var result = await task.ContinueWithResult(v => {
+                continuationThreadId = Thread.CurrentThread.ManagedThreadId;
+                return v * 2;
+            });
+
+            Assert.True(task.IsCompletedSuccessfully);
+            Assert.Equal(42, result);
+            Assert.Equal(threadId, continuationThreadId);
+        }
+
+        [Fact]
+        public async Task ContinueWithResult_NotExecutedOnError() {
+            var task = new Task<Int32>(() => {
+                Thread.Sleep(50);
+                throw new InvalidOperationException("test exception");
+            });
+            task.Start();
+
+            var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                task.ContinueWithResult<Int32, Int32>(
+                    v => throw new NotImplementedException()
+                )
+            );
+
+            Assert.Equal("test exception", exception.Message);
+        }
+
+        [Fact]
+        public void ContinueWithResult_NullTask() {
+            var exception = Assert.Throws<ArgumentNullException>(() => {
+                ((Task<Int32>)null).ContinueWithResult(v => v);
+            });
+
+            Assert.Equal("task", exception.ParamName);
+        }
+
+        [Fact]
+        public void ContinueWithResult_NullFunc() {
+            var task = new Task<Int32>(() => 0);
+
+            var exception = Assert.Throws<ArgumentNullException>(() => {
+                task.ContinueWithResult<Int32, Int32>(null);
+            });
+
+            Assert.Equal("func", exception.ParamName);
         }
 
         private static Task<IList<Int32>> GenerateRandomData(Int32 r) {
