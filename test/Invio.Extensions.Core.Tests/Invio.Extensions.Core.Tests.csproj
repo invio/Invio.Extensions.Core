@@ -1,16 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <AssemblyName>Invio.Extensions.Core.Tests</AssemblyName>
     <TargetFramework>netcoreapp2.1</TargetFramework>
+    <DebugType>portable</DebugType>
+    <AssemblyName>Invio.Extensions.Core.Tests</AssemblyName>
+    <PackageId>Invio.Extensions.Core.Tests</PackageId>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <AssetTargetFallback>
+      $(PackageTargetFallback);dotnet5.4;portable-net451+win8
+    </AssetTargetFallback>
+    <RuntimeFrameworkVersion>2.1.0</RuntimeFrameworkVersion>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Invio.Extensions.Core\Invio.Extensions.Core.csproj" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.7.2" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
     <DotNetCliToolReference Include="dotnet-xunit" Version="2.3.1" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\Invio.Extensions.Core\Invio.Extensions.Core.csproj" />
   </ItemGroup>
 </Project>
