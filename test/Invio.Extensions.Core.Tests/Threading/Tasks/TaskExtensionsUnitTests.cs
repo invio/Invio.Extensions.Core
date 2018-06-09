@@ -83,6 +83,8 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
 
             var task = DivByTwo(GenerateRandomData(IterationCount));
 
+            Console.WriteLine("Cast_AfterContinuation Test: " + task.GetType().ToString());
+
             var result = await task.Cast<List<Double>>();
 
             Assert.NotNull(result);
