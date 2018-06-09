@@ -45,6 +45,10 @@ namespace Invio.Extensions.Threading.Tasks {
 
             var taskType = task.GetType();
             Console.WriteLine("Cast<T> - TaskType: " + taskType.ToString());
+            Console.WriteLine("Cast<T> - IsGenericType: " + taskType.IsGenericType);
+            if (taskType.IsGenericType) {
+                Console.WriteLine("Cast<T> - GetGenericTypeDefinition: " + taskType.GetGenericTypeDefinition().ToString());
+            }
 
             if (!taskType.IsGenericType || taskType.GetGenericTypeDefinition() != typeof(Task<>)) {
                 throw new ArgumentException(
