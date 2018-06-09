@@ -50,6 +50,8 @@ namespace Invio.Extensions.Threading.Tasks {
                 Console.WriteLine("Cast<T> - GetGenericTypeDefinition: " + taskType.GetGenericTypeDefinition().ToString());
             }
 
+            Console.WriteLine("Cast<T> - BaseType: " + taskType.BaseType?.ToString() ?? "null");
+
             if (!taskType.IsGenericType || taskType.GetGenericTypeDefinition() != typeof(Task<>)) {
                 throw new ArgumentException(
                     "Cannot cast Task with no result type.",
