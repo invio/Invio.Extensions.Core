@@ -6,33 +6,36 @@ using System.Threading;
 using System.Threading.Tasks;
 
 namespace Invio.Extensions.Threading.Tasks {
+
     /// <summary>
-    /// Extension methods on the <see cref="Task" /> and <see cref="Task{T}" /> types.
+    ///   Extension methods on the <see cref="Task" /> and <see cref="Task{T}" /> types.
     /// </summary>
     public static class TaskExtensions {
+
         /// <summary>
-        /// Creates a new task that casts the result of the original task to a new type upon
-        /// completion.
+        ///   Creates a new task that casts the result of
+        ///   the original task to a new type upon completion.
         /// </summary>
         /// <remarks>
-        /// No type conversion is performed, so it is only possible to cast the result to the
-        /// actual type, a base type, or an implemented interface.
+        ///   No type conversion is performed, so it is only possible to cast the
+        ///   result to the actual type, a base type, or an implemented interface.
         /// </remarks>
         /// <see cref="Enumerable.Cast{T}"/>
         /// <param name="task">The input task.</param>
         /// <typeparam name="T">Th type to cast the result to.</typeparam>
         /// <returns>
-        /// A new task that casts theresult of the original task to the type
-        /// <typeparamref name="T" /> upon completion.
+        ///   A new task that casts theresult of the original task to the type
+        ///   <typeparamref name="T" /> upon completion.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        /// The parameter <paramref name="task" /> is null.
+        ///   The parameter <paramref name="task" /> is null.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// The parameter <paramref name="task" /> does not return a result.
+        ///   The parameter <paramref name="task" /> does not return a result.
         /// </exception>
         /// <exception cref="InvalidCastException">
-        /// The cast from the original task result type to <typeparamref name="T" /> is invalid.
+        ///   The cast from the original task result
+        ///   type to <typeparamref name="T" /> is invalid.
         /// </exception>
         public static Task<T> Cast<T>(this Task task) {
             if (task == null) {
@@ -44,7 +47,16 @@ namespace Invio.Extensions.Threading.Tasks {
             }
 
             var taskType = task.GetType();
-            if (!taskType.IsGenericType || taskType.GetGenericTypeDefinition() != typeof(Task<>)) {
+
+            do {
+                if (taskType.IsGenericType && taskType.GetGenericTypeDefinition() == typeof(Task<>)) {
+                    break;
+                }
+
+                taskType = taskType.BaseType;
+            } while (taskType != null);
+
+            if (taskType == null) {
                 throw new ArgumentException(
                     "Cannot cast Task with no result type.",
                     nameof(task)
