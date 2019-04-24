@@ -61,6 +61,26 @@ In this example `first` will be "foo", `second` will be "bar", and third will be
 
 Attempting to extract more values than exist in the list will result in an `ArgumentOutOfRangeException`.
 
+### Shuffle
+
+The `IListExtensions.Shuffle` extension methods allow mutable lists to have their items placed in a random order.
+
+```csharp
+var list = new [] { "foo", "bar", "biz" };
+list.Shuffle();
+
+foreach (var item in list) {
+  Console.WriteLine(item);
+}
+
+// Something like of the following:
+//  "biz"
+//  "foo"
+//  "bar"
+```
+
+In this example the order when each `item` that is printed to the console is non-deterministic. It may be the original order of the items.
+
 ## TaskExtensions
 
 ### Cast&lt;T>

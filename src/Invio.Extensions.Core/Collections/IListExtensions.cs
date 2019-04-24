@@ -1,12 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Invio.Extensions.Collections {
     /// <summary>
     /// Extension methods on the <see cref="IList{T}" /> type.
     /// </summary>
     public static class IListExtensions {
+
+        /// <summary>
+        /// By ensuring each instance of <see cref="Random" /> used is on its own thread,
+        /// giving the extension methods that use it thread safety.
+        /// </summary>
+        private static ThreadLocal<Random> random { get; } =
+            new ThreadLocal<Random>(() => new Random());
+
         /// <summary>
         /// Deconstructs a list into a <see cref="Tuple{T,IEnumerable}" /> containing the first
         /// element and a <see cref="IEnumerable{T}" /> containing any remaining elements.
@@ -206,5 +215,35 @@ namespace Invio.Extensions.Collections {
             v5 = source[4];
             rest = source.Skip(5);
         }
+
+        /// <summary>
+        /// Shuffles a list in place by iterating through each item and randomly
+        /// picking a target item to swap places with.
+        /// </summary>
+        /// <remarks>
+        /// This implementation does not guarantee that any items will actually
+        /// change their current locations in the list.
+        /// </remarks>
+        /// <param name="source">
+        /// The list to shuffle.</param>
+        /// <typeparam name="T">The type contained by the list.</typeparam>
+        /// <exception cref="ArgumentNullException">The source list was null.</exception>
+        public static void Shuffle<T>(this IList<T> source) {
+            if (source == null) {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            for (var sourceIndex = 0; sourceIndex < source.Count; sourceIndex++) {
+                var targetIndex = random.Value.Next(0, source.Count);
+
+                if (sourceIndex != targetIndex) {
+                    var tmp = source[sourceIndex];
+                    source[sourceIndex] = source[targetIndex];
+                    source[targetIndex] = tmp;
+                }
+            }
+        }
+
     }
+
 }
