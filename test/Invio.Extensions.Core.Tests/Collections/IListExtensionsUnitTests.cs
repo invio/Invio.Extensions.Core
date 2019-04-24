@@ -173,5 +173,46 @@ namespace Invio.Extensions.Core.Tests.Collections {
                 var (first, second, third, fourth, fifth, _) = (Int32[])null;
             });
         }
+
+        [Fact]
+        public void Shuffle_ArgumentNull() {
+            IList<object> source = null;
+
+            Assert.Throws<ArgumentNullException>(
+                () => source.Shuffle()
+            );
+        }
+
+        [Fact]
+        public void Shuffle_Empty() {
+            var source = new List<String>();
+
+            source.Shuffle();
+
+            Assert.Empty(source);
+        }
+
+        [Fact]
+        public void Shuffle_Single() {
+            var source = new List<String> { "foo" };
+
+            source.Shuffle();
+
+            Assert.Equal(new [] { "foo" }, source);
+        }
+
+        [Fact]
+        public void Shuffle_Many() {
+
+            var original = new List<String> { "foo", "bar", "biz", "buzz", "booze", "bugz" };
+            var shuffled = new List<String>(original);
+
+            shuffled.Shuffle();
+
+            Assert.Equal(original.Count, shuffled.Count);
+            foreach (var item in original) {
+                Assert.Contains(item, shuffled);
+            }
+        }
     }
 }
