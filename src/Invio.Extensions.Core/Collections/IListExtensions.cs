@@ -221,8 +221,12 @@ namespace Invio.Extensions.Collections {
         /// picking a target item to swap places with.
         /// </summary>
         /// <remarks>
-        /// This implementation does not guarantee that any items will actually
-        /// change their current locations in the list.
+        /// <para>
+        /// This implementation utilizes the Fisher-Yates shuffle algorithm.
+        /// This means while implementation does not guarantee that any items
+        /// will actually change their locations in the list, the final result
+        /// of the shuffling is unbiased.
+        /// </para>
         /// </remarks>
         /// <param name="source">
         /// The list to shuffle.</param>
@@ -233,14 +237,14 @@ namespace Invio.Extensions.Collections {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            for (var sourceIndex = 0; sourceIndex < source.Count; sourceIndex++) {
-                var targetIndex = random.Value.Next(0, source.Count);
+            var sourceIndex = source.Count;
 
-                if (sourceIndex != targetIndex) {
-                    var tmp = source[sourceIndex];
-                    source[sourceIndex] = source[targetIndex];
-                    source[targetIndex] = tmp;
-                }
+            while (sourceIndex > 1) {
+                sourceIndex--;
+                var targetIndex = random.Value.Next(sourceIndex + 1);
+                var temp = source[targetIndex];
+                source[targetIndex] = source[sourceIndex];
+                source[sourceIndex] = temp;
             }
         }
 
