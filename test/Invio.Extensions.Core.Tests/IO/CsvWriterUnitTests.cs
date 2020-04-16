@@ -13,22 +13,22 @@ namespace Invio.Extensions.Core.Tests.IO {
                 yield return new Object[] {
                     new CsvWriterOptions(),
                     new { Foo = 1, Bar = 2, Baz = 3 },
-                    "Foo,Bar,Baz\n"
+                    $"Foo,Bar,Baz{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { FieldSeparator = '\t' },
                     new { Foo = 1, Bar = 2, Baz = 3 },
-                    "Foo\tBar\tBaz\n"
+                    $"Foo\tBar\tBaz{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { QuoteAllFields = true },
                     new { Foo = 1, Bar = 2, Baz = 3 },
-                    "\"Foo\",\"Bar\",\"Baz\"\n"
+                    $"\"Foo\",\"Bar\",\"Baz\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { QuoteAllFields = true, QuoteCharacter = '\'' },
                     new { Foo = 1, Bar = 2, Baz = 3 },
-                    "'Foo','Bar','Baz'\n"
+                    $"'Foo','Bar','Baz'{Environment.NewLine}"
                 };
             }
         }
@@ -57,7 +57,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         { "Bar", 2 },
                         { "Baz", 3 }
                     },
-                    "Bar,Baz,Foo\n"
+                    $"Bar,Baz,Foo{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions(),
@@ -66,7 +66,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         { "Bar", 2 },
                         { "Baz", 3 }
                     },
-                    "Bar,Baz,Fo o\n"
+                    $"Bar,Baz,Fo o{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions(),
@@ -75,7 +75,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         { "Bar", 2 },
                         { "Baz", 3 }
                     },
-                    "Bar,Baz,\"Fo,o\"\n"
+                    $"Bar,Baz,\"Fo,o\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions(),
@@ -84,7 +84,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         { "Bar", 2 },
                         { "Baz", 3 }
                     },
-                    "Bar,Baz,\"Fo\\no\"\n"
+                    $"Bar,Baz,\"Fo\\no\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { AllowQuotedNewline = true },
@@ -93,7 +93,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         { "Bar", 2 },
                         { "Baz", 3 }
                     },
-                    "Bar,Baz,\"Fo\no\"\n"
+                    $"Bar,Baz,\"Fo\no\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { FieldSeparator = '\t' },
@@ -102,7 +102,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         { "Bar", 2 },
                         { "Baz", 3 }
                     },
-                    "Bar\tBaz\tFoo\n"
+                    $"Bar\tBaz\tFoo{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { QuoteAllFields = true },
@@ -111,7 +111,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         { "Bar", 2 },
                         { "Baz", 3 }
                     },
-                    "\"Bar\",\"Baz\",\"Foo\"\n"
+                    $"\"Bar\",\"Baz\",\"Foo\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { QuoteAllFields = true, QuoteCharacter = '\'' },
@@ -120,7 +120,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         { "Bar", 2 },
                         { "Baz", 3 }
                     },
-                    "'Bar','Baz','Foo'\n"
+                    $"'Bar','Baz','Foo'{Environment.NewLine}"
                 };
             }
         }
@@ -149,7 +149,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         "Bar",
                         "Baz"
                     },
-                    "Foo,Bar,Baz\n"
+                    $"Foo,Bar,Baz{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions(),
@@ -158,7 +158,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         "Bar",
                         "Baz"
                     },
-                    "Fo o,Bar,Baz\n"
+                    $"Fo o,Bar,Baz{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions(),
@@ -167,7 +167,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         "Bar",
                         "Baz"
                     },
-                    "\"Fo,o\",Bar,Baz\n"
+                    $"\"Fo,o\",Bar,Baz{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions(),
@@ -176,7 +176,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         "Bar",
                         "Baz"
                     },
-                    "\"Fo\\no\",Bar,Baz\n"
+                    $"\"Fo\\no\",Bar,Baz{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { AllowQuotedNewline = true },
@@ -185,7 +185,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         "Bar",
                         "Baz"
                     },
-                    "\"Fo\no\",Bar,Baz\n"
+                    $"\"Fo\no\",Bar,Baz{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { FieldSeparator = '\t' },
@@ -194,7 +194,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         "Bar",
                         "Baz"
                     },
-                    "Foo\tBar\tBaz\n"
+                    $"Foo\tBar\tBaz{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { QuoteAllFields = true },
@@ -203,7 +203,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         "Bar",
                         "Baz"
                     },
-                    "\"Foo\",\"Bar\",\"Baz\"\n"
+                    $"\"Foo\",\"Bar\",\"Baz\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { QuoteAllFields = true, QuoteCharacter = '\'' },
@@ -212,7 +212,7 @@ namespace Invio.Extensions.Core.Tests.IO {
                         "Bar",
                         "Baz"
                     },
-                    "'Foo','Bar','Baz'\n"
+                    $"'Foo','Bar','Baz'{Environment.NewLine}"
                 };
             }
         }
@@ -240,23 +240,23 @@ namespace Invio.Extensions.Core.Tests.IO {
             get {
                 yield return new Object[] {
                     new CsvWriterOptions(),
-                    "Foo,Bar,Baz\n37,73,\"Test,\tquoting\\\\\"\n3.142,2.718,\"Test\\nNewline\"\n0,1,\"Nested \\\"Quotes\\\"\"\n"
+                    $"Foo,Bar,Baz{Environment.NewLine}37,73,\"Test,\tquoting\\\\\"{Environment.NewLine}3.142,2.718,\"Test\\nNewline\"{Environment.NewLine}0,1,\"Nested \\\"Quotes\\\"\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { FieldSeparator = '\t' },
-                    "Foo\tBar\tBaz\n37\t73\t\"Test,\tquoting\\\\\"\n3.142\t2.718\t\"Test\\nNewline\"\n0\t1\t\"Nested \\\"Quotes\\\"\"\n"
+                    $"Foo\tBar\tBaz{Environment.NewLine}37\t73\t\"Test,\tquoting\\\\\"{Environment.NewLine}3.142\t2.718\t\"Test\\nNewline\"{Environment.NewLine}0\t1\t\"Nested \\\"Quotes\\\"\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { AllowQuotedNewline = true },
-                    "Foo,Bar,Baz\n37,73,\"Test,\tquoting\\\\\"\n3.142,2.718,\"Test\nNewline\"\n0,1,\"Nested \\\"Quotes\\\"\"\n"
+                    $"Foo,Bar,Baz{Environment.NewLine}37,73,\"Test,\tquoting\\\\\"{Environment.NewLine}3.142,2.718,\"Test\nNewline\"{Environment.NewLine}0,1,\"Nested \\\"Quotes\\\"\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { QuoteCharacter = '\'' },
-                    "Foo,Bar,Baz\n37,73,'Test,\tquoting\\\\'\n3.142,2.718,'Test\\nNewline'\n0,1,Nested \"Quotes\"\n"
+                    $"Foo,Bar,Baz{Environment.NewLine}37,73,'Test,\tquoting\\\\'{Environment.NewLine}3.142,2.718,'Test\\nNewline'{Environment.NewLine}0,1,Nested \"Quotes\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { QuoteAllFields = true, QuoteCharacter = '\''},
-                    "'Foo','Bar','Baz'\n'37','73','Test,\tquoting\\\\'\n'3.142','2.718','Test\\nNewline'\n'0','1','Nested \"Quotes\"'\n"
+                    $"'Foo','Bar','Baz'{Environment.NewLine}'37','73','Test,\tquoting\\\\'{Environment.NewLine}'3.142','2.718','Test\\nNewline'{Environment.NewLine}'0','1','Nested \"Quotes\"'{Environment.NewLine}"
                 };
             }
         }
@@ -294,23 +294,23 @@ namespace Invio.Extensions.Core.Tests.IO {
             get {
                 yield return new Object[] {
                     new CsvWriterOptions(),
-                    "37,73,\"Test,\tquoting\\\\\"\n3.142,2.718,\"Test\\nNewline\"\n0,1,\"Nested \\\"Quotes\\\"\"\n"
+                    $"37,73,\"Test,\tquoting\\\\\"{Environment.NewLine}3.142,2.718,\"Test\\nNewline\"{Environment.NewLine}0,1,\"Nested \\\"Quotes\\\"\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { FieldSeparator = '\t' },
-                    "37\t73\t\"Test,\tquoting\\\\\"\n3.142\t2.718\t\"Test\\nNewline\"\n0\t1\t\"Nested \\\"Quotes\\\"\"\n"
+                    $"37\t73\t\"Test,\tquoting\\\\\"{Environment.NewLine}3.142\t2.718\t\"Test\\nNewline\"{Environment.NewLine}0\t1\t\"Nested \\\"Quotes\\\"\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { AllowQuotedNewline = true },
-                    "37,73,\"Test,\tquoting\\\\\"\n3.142,2.718,\"Test\nNewline\"\n0,1,\"Nested \\\"Quotes\\\"\"\n"
+                    $"37,73,\"Test,\tquoting\\\\\"{Environment.NewLine}3.142,2.718,\"Test\nNewline\"{Environment.NewLine}0,1,\"Nested \\\"Quotes\\\"\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { QuoteCharacter = '\'' },
-                    "37,73,'Test,\tquoting\\\\'\n3.142,2.718,'Test\\nNewline'\n0,1,Nested \"Quotes\"\n"
+                    $"37,73,'Test,\tquoting\\\\'{Environment.NewLine}3.142,2.718,'Test\\nNewline'{Environment.NewLine}0,1,Nested \"Quotes\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { QuoteAllFields = true, QuoteCharacter = '\''},
-                    "'37','73','Test,\tquoting\\\\'\n'3.142','2.718','Test\\nNewline'\n'0','1','Nested \"Quotes\"'\n"
+                    $"'37','73','Test,\tquoting\\\\'{Environment.NewLine}'3.142','2.718','Test\\nNewline'{Environment.NewLine}'0','1','Nested \"Quotes\"'{Environment.NewLine}"
                 };
             }
         }
@@ -345,23 +345,23 @@ namespace Invio.Extensions.Core.Tests.IO {
             get {
                 yield return new Object[] {
                     new CsvWriterOptions(),
-                    "\"Column, Bar\",Foo Column,\"\\\"Baz\\\"\"\n37,73,\"Test,\tquoting\\\\\"\n3.142,2.718,\"Test\\nNewline\"\n0,1,\"Nested \\\"Quotes\\\"\"\n"
+                    $"\"Column, Bar\",Foo Column,\"\\\"Baz\\\"\"{Environment.NewLine}37,73,\"Test,\tquoting\\\\\"{Environment.NewLine}3.142,2.718,\"Test\\nNewline\"{Environment.NewLine}0,1,\"Nested \\\"Quotes\\\"\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { FieldSeparator = '\t' },
-                    "Column, Bar\tFoo Column\t\"\\\"Baz\\\"\"\n37\t73\t\"Test,\tquoting\\\\\"\n3.142\t2.718\t\"Test\\nNewline\"\n0\t1\t\"Nested \\\"Quotes\\\"\"\n"
+                    $"Column, Bar\tFoo Column\t\"\\\"Baz\\\"\"{Environment.NewLine}37\t73\t\"Test,\tquoting\\\\\"{Environment.NewLine}3.142\t2.718\t\"Test\\nNewline\"{Environment.NewLine}0\t1\t\"Nested \\\"Quotes\\\"\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { AllowQuotedNewline = true },
-                    "\"Column, Bar\",Foo Column,\"\\\"Baz\\\"\"\n37,73,\"Test,\tquoting\\\\\"\n3.142,2.718,\"Test\nNewline\"\n0,1,\"Nested \\\"Quotes\\\"\"\n"
+                    $"\"Column, Bar\",Foo Column,\"\\\"Baz\\\"\"{Environment.NewLine}37,73,\"Test,\tquoting\\\\\"{Environment.NewLine}3.142,2.718,\"Test\nNewline\"{Environment.NewLine}0,1,\"Nested \\\"Quotes\\\"\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { QuoteCharacter = '\'' },
-                    "'Column, Bar',Foo Column,\"Baz\"\n37,73,'Test,\tquoting\\\\'\n3.142,2.718,'Test\\nNewline'\n0,1,Nested \"Quotes\"\n"
+                    $"'Column, Bar',Foo Column,\"Baz\"{Environment.NewLine}37,73,'Test,\tquoting\\\\'{Environment.NewLine}3.142,2.718,'Test\\nNewline'{Environment.NewLine}0,1,Nested \"Quotes\"{Environment.NewLine}"
                 };
                 yield return new Object[] {
                     new CsvWriterOptions { QuoteAllFields = true, QuoteCharacter = '\''},
-                    "'Column, Bar','Foo Column','\"Baz\"'\n'37','73','Test,\tquoting\\\\'\n'3.142','2.718','Test\\nNewline'\n'0','1','Nested \"Quotes\"'\n"
+                    $"'Column, Bar','Foo Column','\"Baz\"'{Environment.NewLine}'37','73','Test,\tquoting\\\\'{Environment.NewLine}'3.142','2.718','Test\\nNewline'{Environment.NewLine}'0','1','Nested \"Quotes\"'{Environment.NewLine}"
                 };
             }
         }
