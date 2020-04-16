@@ -363,8 +363,8 @@ namespace Invio.Extensions.IO {
                 return str.Quote(
                     quoteCharacter: this.options.QuoteCharacter,
                     escapeCharacter: this.options.EscapeCharacter,
-                    this.options.AllowQuotedNewline ? null : new[] { '\n', '\r' },
-                    this.options.AllowQuotedNewline ? null : new[] { "n", "r" }
+                    specialCharacters: this.options.AllowQuotedNewline ? null : new[] { '\n', '\r' },
+                    escapeSequences: this.options.AllowQuotedNewline ? null : new[] { "n", "r" }
                 );
             } else {
                 return str;
