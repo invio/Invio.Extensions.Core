@@ -11,12 +11,12 @@ using Xunit.Abstractions;
 
 namespace Invio.Extensions.Core.Tests.Threading.Tasks {
     public class TaskExtensionsUnitTests {
-        private readonly ITestOutputHelper outputHelper;
+        // private readonly ITestOutputHelper outputHelper;
         private const Int32 IterationCount = 20;
 
-        public TaskExtensionsUnitTests(ITestOutputHelper outputHelper) {
-            this.outputHelper = outputHelper;
-        }
+        // public TaskExtensionsUnitTests(ITestOutputHelper outputHelper) {
+        //     this.outputHelper = outputHelper;
+        // }
 
         [Fact]
         public async Task Cast_ToObject() {
@@ -148,7 +148,7 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
 
         [Fact]
         public void Cast_VoidResult_ArgumentException() {
-            var task = new Task(() => this.outputHelper.WriteLine("test"));
+            var task = new Task(() => Console.WriteLine("test"));
 
             // Should throw synchronously
             var exception = Assert.Throws<ArgumentException>(() => (Object)task.Cast<Object>());
@@ -227,7 +227,7 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
             var executing = new ManualResetEventSlim();
             var doneExecuting = new ManualResetEventSlim();
             var testThread = new Thread(() => {
-                var taskFactory = new TaskFactory(new SingleThreadedTaskScheduler(this.outputHelper));
+                var taskFactory = new TaskFactory(new SingleThreadedTaskScheduler());
 
                 taskFactory.StartNew(() => {
                     // This is a bad idea
@@ -238,8 +238,8 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
 
             testThread.Start();
 
-            Assert.True(executing.Wait(500), "The task did not start executing");
-            Assert.False(doneExecuting.Wait(500), "The task finished when it should have deadlocked.");
+            Assert.True(executing.Wait(5000), "The task did not start executing");
+            Assert.False(doneExecuting.Wait(5000), "The task finished when it should have deadlocked.");
         }
 
         [Fact]
@@ -248,7 +248,7 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
             var executing = new ManualResetEventSlim();
             var doneExecuting = new ManualResetEventSlim();
             var testThread = new Thread(() => {
-                var taskFactory = new TaskFactory(new SingleThreadedTaskScheduler(this.outputHelper));
+                var taskFactory = new TaskFactory(new SingleThreadedTaskScheduler());
 
                 taskFactory.StartNew(() => {
                     output.Enqueue($"Result: {OverlyProtectiveAsyncFunction(output, executing).Result}");
@@ -258,13 +258,13 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
 
             testThread.Start();
 
-            Assert.True(executing.Wait(500), "The task did not start executing");
-            Assert.True(doneExecuting.Wait(500), "The task deadlocked when it should have finished.");
+            Assert.True(executing.Wait(5000), "The task did not start executing");
+            Assert.True(doneExecuting.Wait(5000), "The task deadlocked when it should have finished.");
 
             Assert.Equal(3, output.Count);
-            foreach (var line in output) {
-                this.outputHelper.WriteLine(line);
-            }
+            // foreach (var line in output) {
+            //     this.outputHelper.WriteLine(line);
+            // }
         }
 
         [Fact]
@@ -273,7 +273,7 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
             var executing = new ManualResetEventSlim();
             var doneExecuting = new ManualResetEventSlim();
             var testThread = new Thread(() => {
-                var taskFactory = new TaskFactory(new SingleThreadedTaskScheduler(this.outputHelper));
+                var taskFactory = new TaskFactory(new SingleThreadedTaskScheduler());
 
                 taskFactory.StartNew(() => {
                     output.Enqueue($"Result: {Synchronously.Await(() => SomeAsyncFunction(output, executing))}");
@@ -283,38 +283,38 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
 
             testThread.Start();
 
-            Assert.True(executing.Wait(500), "The task did not start executing");
-            Assert.True(doneExecuting.Wait(500), "The task deadlocked when it should have finished.");
+            Assert.True(executing.Wait(5000), "The task did not start executing");
+            Assert.True(doneExecuting.Wait(5000), "The task deadlocked when it should have finished.");
 
             Assert.Equal(3, output.Count);
-            foreach (var line in output) {
-                this.outputHelper.WriteLine(line);
-            }
+            // foreach (var line in output) {
+            //     this.outputHelper.WriteLine(line);
+            // }
         }
 
 
         private async Task<Int32> SomeAsyncFunction(ConcurrentQueue<String> output, ManualResetEventSlim signal) {
-            this.outputHelper.WriteLine("Async Function Started");
+            // this.outputHelper.WriteLine("Async Function Started");
             output.Enqueue("Task Started");
             signal.Set();
             await Task.Delay(100);
-            this.outputHelper.WriteLine("First Delay Completed");
+            // this.outputHelper.WriteLine("First Delay Completed");
             // If this task is awaited synchronously on the main thread than there will be a deadlock and this part of the function will never execute.
             await Task.Delay(100);
-            this.outputHelper.WriteLine("Second Delay Completed");
+            // this.outputHelper.WriteLine("Second Delay Completed");
             output.Enqueue("Task Complete");
             return output.Count;
         }
 
         private async Task<Int32> OverlyProtectiveAsyncFunction(ConcurrentQueue<String> output, ManualResetEventSlim signal) {
-            this.outputHelper.WriteLine("Async Function Started");
+            // this.outputHelper.WriteLine("Async Function Started");
             output.Enqueue("Task Started");
             signal.Set();
             await Task.Delay(100).ConfigureAwait(false);
-            this.outputHelper.WriteLine("First Delay Completed");
+            // this.outputHelper.WriteLine("First Delay Completed");
             // If this task is awaited synchronously on the main thread than there will be a deadlock and this part of the function will never execute.
             await Task.Delay(100).ConfigureAwait(false);
-            this.outputHelper.WriteLine("Second Delay Completed");
+            // this.outputHelper.WriteLine("Second Delay Completed");
             output.Enqueue("Task Complete");
             return output.Count;
         }
@@ -342,28 +342,28 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
             private readonly SemaphoreSlim taskStartSync = new SemaphoreSlim(1);
             private readonly Object taskQueueSync = new Object();
 
-            private readonly ITestOutputHelper outputHelper;
+            // private readonly ITestOutputHelper outputHelper;
 
-            public SingleThreadedTaskScheduler(ITestOutputHelper outputHelper) {
-                this.outputHelper = outputHelper;
-            }
+            // public SingleThreadedTaskScheduler(ITestOutputHelper outputHelper) {
+            //     this.outputHelper = outputHelper;
+            // }
 
             protected override IEnumerable<Task> GetScheduledTasks() {
                 return this.taskQueue.Select(w => w.Task).ToList();
             }
 
             protected override void QueueTask(Task task) {
-                this.outputHelper.WriteLine($"Queuing task: {task.GetHashCode()}");
+                // this.outputHelper.WriteLine($"Queuing task: {task.GetHashCode()}");
                 // Atomically acquire enqueue our new task and then check the semaphore
                 Monitor.Enter(this.taskQueueSync);
                 this.taskQueue.Enqueue(task);
                 if (this.taskStartSync.Wait(TimeSpan.Zero)) {
                     Monitor.Exit(this.taskQueueSync);
                     // No task was running, we can proceed
-                    this.outputHelper.WriteLine($"Initiating ThreadPool execution for task: {task.GetHashCode()}");
+                    // this.outputHelper.WriteLine($"Initiating ThreadPool execution for task: {task.GetHashCode()}");
                     ThreadPool.UnsafeQueueUserWorkItem(
                         _ => {
-                            this.outputHelper.WriteLine($"Beginning task execution with task: {task.GetHashCode()}");
+                            // this.outputHelper.WriteLine($"Beginning task execution with task: {task.GetHashCode()}");
                             currentThreadIsProcessingItems = true;
                             try {
                                 while (true) {
@@ -372,9 +372,9 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
                                     // Atomically check the task queue length and release the semaphore if it is empty
                                     Monitor.Enter(this.taskQueueSync);
                                     try {
-                                        this.outputHelper.WriteLine($"Attempting to dequeue the next task");
+                                        // this.outputHelper.WriteLine($"Attempting to dequeue the next task");
                                         if (!this.taskQueue.TryDequeue(out nextTask)) {
-                                            this.outputHelper.WriteLine($"No Tasks Pending");
+                                            // this.outputHelper.WriteLine($"No Tasks Pending");
                                             this.taskStartSync.Release();
                                             break;
                                         }
@@ -383,10 +383,10 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
                                     }
 
                                     if (!nextTask.Skip) {
-                                        this.outputHelper.WriteLine($"Executing Task: {nextTask.Task.GetHashCode()}");
+                                        // this.outputHelper.WriteLine($"Executing Task: {nextTask.Task.GetHashCode()}");
                                         this.TryExecuteTask(nextTask.Task);
                                     } else {
-                                        this.outputHelper.WriteLine($"Skipping Previously Executed Task: {nextTask.Task.GetHashCode()}");
+                                        // this.outputHelper.WriteLine($"Skipping Previously Executed Task: {nextTask.Task.GetHashCode()}");
                                     }
                                 }
                             } finally {
@@ -403,7 +403,7 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
 
             protected override Boolean TryExecuteTaskInline(Task task, Boolean taskWasPreviouslyQueued) {
                 if (!currentThreadIsProcessingItems) {
-                    this.outputHelper.WriteLine($"Declining to inline task {task.GetHashCode()} because this is not a task execution thread.");
+                    // this.outputHelper.WriteLine($"Declining to inline task {task.GetHashCode()} because this is not a task execution thread.");
                     return false;
                 }
 
@@ -414,7 +414,7 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
                     }
                 }
 
-                this.outputHelper.WriteLine($"Inlining Task {task.GetHashCode()}");
+                // this.outputHelper.WriteLine($"Inlining Task {task.GetHashCode()}");
                 return base.TryExecuteTask(task);
             }
 
