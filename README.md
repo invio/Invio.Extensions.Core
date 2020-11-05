@@ -3,7 +3,7 @@
 General purpose extensions to components of the .Net Core Framework.
 
 [![Appveyor](https://ci.appveyor.com/api/projects/status/74ub7qe2eitxuj4d?svg=true)](https://ci.appveyor.com/project/invio/invio-extensions-core/branch/master)
-[![Travis CI](https://img.shields.io/travis/invio/Invio.Extensions.Core.svg?maxAge=3600&label=travis)](https://travis-ci.org/invio/Invio.Extensions.Core)
+[![Build Status](https://travis-ci.org/invio/Invio.Extensions.Core.svg?branch=master)](https://travis-ci.org/invio/Invio.Extensions.Core)
 [![Coverage](https://coveralls.io/repos/github/invio/Invio.Extensions.Core/badge.svg?branch=master)](https://coveralls.io/github/invio/Invio.Extensions.Core?branch=master)
 [![NuGet](https://img.shields.io/nuget/v/Invio.Extensions.Core.svg)](https://www.nuget.org/packages/Invio.Extensions.Core/)
 
