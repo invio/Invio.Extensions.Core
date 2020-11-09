@@ -292,6 +292,24 @@ namespace Invio.Extensions.Core.Tests.Threading.Tasks {
             // }
         }
 
+        [Fact]
+        public void SynchronouslyAwait_UnwrapsExceptions() {
+            async Task Example(String argument) {
+                await Task.Delay(1);
+                if (argument == "fail") {
+                    throw new ArgumentException("Message", nameof(argument));
+                }
+            }
+
+            var exception = Record.Exception(() => {
+                Synchronously.Await(() => Example("fail"));
+            });
+
+            var argumentException = Assert.IsType<ArgumentException>(exception);
+
+            Assert.Equal("argument", argumentException.ParamName);
+        }
+
 
         private async Task<Int32> SomeAsyncFunction(ConcurrentQueue<String> output, ManualResetEventSlim signal) {
             // this.outputHelper.WriteLine("Async Function Started");

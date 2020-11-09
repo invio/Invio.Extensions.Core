@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 
 namespace Invio.Extensions.Threading.Tasks {
@@ -19,7 +20,15 @@ namespace Invio.Extensions.Threading.Tasks {
         /// </remarks>
         /// <param name="createTask">A function that returns a task.</param>
         public static void Await(Func<Task> createTask) {
-            CreateDetached(createTask).Wait();
+            try {
+                CreateDetached(createTask).Wait();
+            } catch (AggregateException exception) {
+                if (exception.InnerExceptions.Count == 1) {
+                    ExceptionDispatchInfo.Capture(exception.InnerExceptions[0]).Throw();
+                } else {
+                    throw;
+                }
+            }
         }
 
         /// <summary>
@@ -38,7 +47,16 @@ namespace Invio.Extensions.Threading.Tasks {
         /// The result of the task returned by <paramref name="createTask"/>.
         /// </returns>
         public static T Await<T>(Func<Task<T>> createTask) {
-            return CreateDetached(createTask).Result;
+            try {
+                return CreateDetached(createTask).Result;
+            } catch (AggregateException exception) {
+                if (exception.InnerExceptions.Count == 1) {
+                    ExceptionDispatchInfo.Capture(exception.InnerExceptions[0]).Throw();
+                    throw;
+                } else {
+                    throw;
+                }
+            }
         }
 
         private static async Task CreateDetached(Func<Task> createTask) {
